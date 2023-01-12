@@ -1,0 +1,25 @@
+# temporary files
+*~
+
+# vim
+.*.swp
+
+# python
+*.py[cod]
+__pycache__
+*$py.classs
+.venv
+
+# datas or personal files
+/build
+/dist
+
+# tests
+/.tests
+/.pytest_cache
+
+# doc
+/apidoc/generated
+
+# IDEs folders
+.vscode

@@ -52,5 +52,5 @@ As per section 7 of the GPLv3, the license is supplemented with the following ad
 
 ## Authors
 
-The SPA Studios pipeline team (2021-2023):  
+The SPA Studios pipeline team (2021-2023):
 Antoine Boellinger ([@aboellinger](https://github.com/aboellinger)), Bryan Fordney ([@bryab](https://github.com/bryab)), Falk David ([@falkdavid](https://github.com/falkdavid)), Mickael Villain ([@micka-06](https://github.com/micka-06)), Nick Alberelli ([@NickTiny](https://github.com/NickTiny)), Paolo Fazio ([@PaoloFazio](https://github.com/PaoloFazio)), Yann Lanthony ([@yann-lty](https://github.com/yann-lty)).

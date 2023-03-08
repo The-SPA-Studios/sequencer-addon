@@ -203,14 +203,12 @@ class SEQUENCER_OT_edit_conform_shots_from_editorial(bpy.types.Operator):
         return context.window_manager.invoke_props_dialog(self)
 
     def execute(self, context: bpy.types.Context):
-
         seq_editor = context.scene.sequence_editor
         regex = re.compile(self.shot_id_regex)
 
         shot_naming = ShotNaming()
 
         for strip in seq_editor.sequences:
-
             if self.ref_channel != 0 and strip.channel != self.ref_channel:
                 continue
 

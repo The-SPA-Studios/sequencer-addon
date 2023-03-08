@@ -9,6 +9,7 @@
 __pycache__
 *$py.classs
 .venv
+venv*/
 
 # datas or personal files
 /build

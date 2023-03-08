@@ -456,7 +456,6 @@ def sync_system_update(context: bpy.types.Context, force: bool = False):
 
         # Strip at target time is valid but differs from current master strip:
         if new_strip != strip:
-
             # Discard changes coming from outside the strip range.
             if sync_settings.last_strip_scene_frame_out_of_range:
                 return

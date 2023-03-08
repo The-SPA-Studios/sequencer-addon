@@ -82,7 +82,6 @@ class BaseTask:
 
 @dataclass
 class BaseRenderTask(BaseTask):
-
     is_modal: bool = True
     handlers_registered: bool = False
 
@@ -319,7 +318,6 @@ class StripRenderTask(BaseRenderTask):
                 channel=scene_strip.channel + channel_offset,
                 frame_start=scene_strip.frame_final_start,
             )
-
             start_handle = frames_handles
             if frames_handles > 0 and render_options.renderer == "INTERNAL":
                 # Internal render does not support negative frame rendering.
@@ -338,6 +336,10 @@ class StripRenderTask(BaseRenderTask):
                 (strip, scene_strip.scene.frame_start, scene_strip.scene.frame_end)
             )
 
+        # Transfer properties from source to new strip
+        props = ("blend_alpha",)
+        _transfer_strip_properties(scene_strip, strip, props)
+
         for strip, frame_start, frame_end in strips:
             # Re-assign the strip channel to force Blender to evalute overlaps
             strip.channel = strip.channel
@@ -350,6 +352,51 @@ class StripRenderTask(BaseRenderTask):
             strip[STRIP_PROP_SOURCE_CAMERA] = scene_strip.scene.camera.name
             strip[STRIP_PROP_SOURCE_FRAME_START] = frame_start
             strip[STRIP_PROP_SOURCE_FRAME_END] = frame_end
+
+
+def _transfer_strip_properties(src_strip, dst_strip, props):
+    src_scene = src_strip.id_data
+    dst_scene = dst_strip.id_data
+
+    # First cover the common and simples case: no animation at all.
+    for prop in props:
+        setattr(dst_strip, prop, getattr(src_strip, prop))
+
+    # Then copy fcurves
+    src_paths = {prop: src_strip.path_from_id(prop) for prop in props}
+    for prop, src_path in src_paths.items():
+        src_curve = _get_fcurve(src_scene, src_path)
+        if not src_curve:
+            continue
+
+        # Touch destination curve
+        dst_path = dst_strip.path_from_id(prop)
+        dst_scene.keyframe_insert(dst_path)
+        dst_curve = _get_fcurve(dst_scene, dst_path)
+
+        # Add back a copy of the points
+        src_points = src_curve.keyframe_points
+        dst_points = dst_curve.keyframe_points
+        dst_points.clear()
+        dst_points.add(len(src_points))
+        for i, point in enumerate(src_points):
+            dst_points[i].co = point.co
+
+    # TODO: Support the driver case ?
+
+
+def _get_fcurve(block, path):
+    anim = block.animation_data
+    if not anim:
+        return
+
+    action = anim.action
+    if not action:
+        return
+
+    for curve in action.fcurves:
+        if curve.data_path == path:
+            return curve
 
 
 @dataclass
@@ -437,7 +484,6 @@ class CopySoundStripsTask(BaseTask):
 
 @dataclass
 class FitResolutionToContentTask(BaseTask):
-
     scene: Optional[bpy.types.Scene] = None
 
     def run(self, context: bpy.types.Context, render_options: BatchRenderOptions):

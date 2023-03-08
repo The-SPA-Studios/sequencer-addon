@@ -23,7 +23,6 @@ class SEQUENCER_MT_editorial(bpy.types.Menu):
     bl_label = "Editorial"
 
     def draw(self, context):
-
         if HAS_OTIO:
             self.layout.menu("SEQUENCER_MT_edit_io")
 

@@ -39,7 +39,7 @@ class TimelineSyncSettings(bpy.types.PropertyGroup):
     sync_all_windows: bpy.props.BoolProperty(
         name="Synchronize all Windows",
         description="Whether the Timeline Synchronization impacts all Main Windows",
-        default=False,
+        default=True,
     )
 
     keep_gpencil_tool_settings: bpy.props.BoolProperty(
@@ -595,17 +595,14 @@ def on_load_pre(*args):
 def on_load_post(*args):
     sync_settings = get_sync_settings()
     # Auto-setup the system for the new file if the active screen contains
-    # a Sequence Editor area defining a scene override with at least 1 scene strip.
-    for area in bpy.context.screen.areas:
-        space = area.spaces.active
-        if isinstance(space, bpy.types.SpaceSequenceEditor) and getattr(
-            space, "scene_override", False
-        ):
-            seq_editor = area.spaces.active.scene_override.sequence_editor
+    # a Sequence Editor area defining a scene with at least 1 scene strip.
+    for scene in bpy.data.scenes:
+        if scene.sequence_editor:
+            seq_editor = scene.sequence_editor
             if seq_editor and any(
                 isinstance(s, bpy.types.SceneSequence) for s in seq_editor.sequences
             ):
-                sync_settings.master_scene = area.spaces.active.scene_override
+                sync_settings.master_scene = scene
                 sync_settings.enabled = True
                 update_sync_cache_from_current_state()
                 break

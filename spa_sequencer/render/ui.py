@@ -16,7 +16,6 @@ class SEQUENCER_PT_batch_render(bpy.types.Panel):
         self.layout.use_property_split = True
         options = context.scene.batch_render_options
         self.layout.prop(options, "media_type")
-        self.layout.prop(options, "renderer")
         self.layout.prop(options, "render_engine")
         self.layout.prop(options, "resolution")
         if options.media_type == "MOVIE":

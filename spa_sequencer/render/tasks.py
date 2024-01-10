@@ -8,6 +8,8 @@ import os
 from typing import Any, Callable, Optional
 import bpy
 from spa_sequencer.render.props import MEDIA_TYPES_FORMATS, BatchRenderOptions
+from spa_sequencer.sync.core import get_sync_settings
+
 
 from spa_sequencer.sync.core import remap_frame_value
 
@@ -232,6 +234,9 @@ class StripRenderTask(BaseRenderTask):
         self.overrides.set(scene.render, "filepath", filepath)
 
     def run(self, context: bpy.types.Context, render_options: BatchRenderOptions):
+        # Ensures functions dependant on current strip/sync are updated during render 
+        get_sync_settings().last_master_strip = self.strip.name
+
         overrides = {"scene": self.scene}
         if self.viewport_area:
             overrides["area"] = self.viewport_area

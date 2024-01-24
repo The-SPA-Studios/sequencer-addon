@@ -597,15 +597,14 @@ def on_load_post(*args):
     # Auto-setup the system for the new file if the active screen contains
     # a Sequence Editor area defining a scene with at least 1 scene strip.
     for scene in bpy.data.scenes:
-        if scene.sequence_editor:
-            seq_editor = scene.sequence_editor
-            if seq_editor and any(
-                isinstance(s, bpy.types.SceneSequence) for s in seq_editor.sequences
-            ):
-                sync_settings.master_scene = scene
-                sync_settings.enabled = True
-                update_sync_cache_from_current_state()
-                break
+        seq_editor = scene.sequence_editor
+        if not seq_editor:
+            continue
+        if any(isinstance(s, bpy.types.SceneSequence) for s in seq_editor.sequences):
+            sync_settings.master_scene = scene
+            sync_settings.enabled = True
+            update_sync_cache_from_current_state()
+            break
 
 
 @bpy.app.handlers.persistent

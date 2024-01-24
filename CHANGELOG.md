@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+- Port the add-on to Blender 4.0 (credit to [@NickTiny](https://github.com/NickTiny))
+
 ## [1.0.1] - 2023-3-08
 
 - Added support for strip opacity in the batch render. Now values and keyframed animation on opacity strips is transferred during batch render.

@@ -30,7 +30,8 @@ class RenderCancelled(RuntimeError):
 
 def close_window(window: bpy.types.Window):
     """Helper function to close the window `win`."""
-    bpy.ops.wm.window_close({"window": window}, "INVOKE_DEFAULT")
+    with bpy.context.temp_override(window=window):
+        bpy.ops.wm.window_close("INVOKE_DEFAULT")
 
 
 class SEQUENCER_OT_batch_render(bpy.types.Operator):
@@ -122,7 +123,8 @@ class SEQUENCER_OT_batch_render(bpy.types.Operator):
         if sed := output_scene.sequence_editor:
             # Deselect all strips in output scene's sequencer in order to keep
             # only the new strips as selected.
-            bpy.ops.sequencer.select_all({"scene": output_scene}, action="DESELECT")
+            with bpy.context.temp_override(scene=output_scene):
+                bpy.ops.sequencer.select_all(action="DESELECT")
 
             # Compute channel offset in output scene based on existing content
             if self.render_options.output_auto_offset_channels and sed.sequences:
@@ -146,13 +148,12 @@ class SEQUENCER_OT_batch_render(bpy.types.Operator):
         # Get window region.
         region = next(region for region in area.regions if region.type == "WINDOW")
         # Ensure the entire rendered image is visible in the render window.
-        bpy.ops.image.view_all(
-            {
-                "window": self.render_window,
-                "area": self.render_window.screen.areas[0],
-                "region": region,
-            }
-        )
+        with bpy.context.temp_override(
+            window=self.render_window,
+            area=self.render_window.screen.areas[0],
+            region=region,
+        ):
+            bpy.ops.image.view_all()
 
     def cancel(self, context):
         """Called when the operator is cancelled, e.g when the user closes the
@@ -239,7 +240,6 @@ class SEQUENCER_OT_batch_render(bpy.types.Operator):
 
         # Show the render window ourselves to identify it.
         main_window = context.window
-        ctx = context.copy()
         bpy.ops.render.view_show("INVOKE_DEFAULT")
 
         # If render view is not active at this point, it means that it was already open.
@@ -253,11 +253,11 @@ class SEQUENCER_OT_batch_render(bpy.types.Operator):
                 try:
                     # This operator will only succeed if the window and area
                     # match a render view setup.
-                    bpy.ops.render.view_cancel(
-                        {"window": win, "area": win.screen.areas[0]}
-                    )
+                    with context.temp_override(window=win, area=win.screen.areas[0]):
+                        bpy.ops.render.view_cancel()
                     # Re-open the render view
-                    bpy.ops.render.view_show(ctx, "INVOKE_DEFAULT")
+                    with context.temp_override():
+                        bpy.ops.render.view_show("INVOKE_DEFAULT")
                     break
                 except RuntimeError:
                     pass

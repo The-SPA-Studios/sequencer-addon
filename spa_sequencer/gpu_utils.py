@@ -1,7 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2023, The SPA Studios. All rights reserved.
 
-import bgl
 import bpy
 import gpu
 
@@ -19,11 +18,11 @@ def ui_scaled(val):
 
 
 class OverlayDrawer:
-    """Helper class to draw overlays using bgl and gpu API."""
+    """Helper class to draw overlays using gpu API."""
 
     def __init__(self):
         self.format = gpu.types.GPUVertFormat()
-        self.shader = gpu.shader.from_builtin("2D_UNIFORM_COLOR")
+        self.shader = gpu.shader.from_builtin("UNIFORM_COLOR")
 
         self.pos_id = self.format.attr_add(
             id="pos", comp_type="F32", len=2, fetch_mode="FLOAT"
@@ -33,14 +32,14 @@ class OverlayDrawer:
         )
 
     def draw(self, coords: list[Vec2f], indices: list[Vec3], color: Vec4f):
-        bgl.glEnable(bgl.GL_BLEND)
+        gpu.state.blend_set("ALPHA")
 
         batch = batch_for_shader(self.shader, "TRIS", {"pos": coords}, indices=indices)
         batch.program_set(self.shader)
         self.shader.uniform_float("color", color)
         batch.draw()
 
-        bgl.glDisable(bgl.GL_BLEND)
+        gpu.state.blend_set("NONE")
 
     def draw_points(self, coords: list[Vec2f], color: Vec4f):
         """Draw points at specified coords.
@@ -48,12 +47,12 @@ class OverlayDrawer:
         :param coords: Points coordinates.
         :param color: Color of the points.
         """
-        bgl.glEnable(bgl.GL_BLEND)
+        gpu.state.blend_set("ALPHA")
         batch = batch_for_shader(self.shader, "POINTS", {"pos": coords})
         batch.program_set(self.shader)
         self.shader.uniform_float("color", color)
         batch.draw()
-        bgl.glDisable(bgl.GL_BLEND)
+        gpu.state.blend_set("NONE")
 
     def draw_lines(self, coords: list[Vec2f], color: Vec4f):
         """Draw lines at specified coords.
@@ -61,12 +60,12 @@ class OverlayDrawer:
         :param coords: Lines points coordinates.
         :param color: Color of the lines.
         """
-        bgl.glEnable(bgl.GL_BLEND)
+        gpu.state.blend_set("ALPHA")
         batch = batch_for_shader(self.shader, "LINES", {"pos": coords})
         batch.program_set(self.shader)
         self.shader.uniform_float("color", color)
         batch.draw()
-        bgl.glDisable(bgl.GL_BLEND)
+        gpu.state.blend_set("NONE")
 
     def draw_rect(self, x: float, y: float, width: float, height: float, color: Vec4f):
         """Draw a filled rectangle, with [x,y] origin at bottom left corner.

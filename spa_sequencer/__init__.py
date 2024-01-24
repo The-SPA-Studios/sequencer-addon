@@ -17,7 +17,7 @@ bl_info = {
     "name": "Sequencer",
     "author": "The SPA Studios",
     "description": "Toolset to improve the sequence workflow in Blender.",
-    "blender": (3, 3, 0),
+    "blender": (4, 0, 0),
     "version": (1, 0, 1),
     "location": "",
     "warning": "",

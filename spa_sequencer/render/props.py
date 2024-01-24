@@ -34,10 +34,7 @@ class BatchRenderOptions(bpy.types.PropertyGroup):
     renderer: bpy.props.EnumProperty(
         name="Renderer",
         description="The renderer to use",
-        items=(
-            ("INTERNAL", "Internal", "Use Internal rendering"),
-            ("VIEWPORT", "Viewport", "Use Viewport rendering"),
-        ),
+        items=(("INTERNAL", "Internal", "Use Internal rendering"),),
         default="INTERNAL",
         options=set(),
     )

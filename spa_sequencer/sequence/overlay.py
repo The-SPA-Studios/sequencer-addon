@@ -93,7 +93,7 @@ def draw_shot_strip(
     # Shot name
     font_id = 0
     blf.color(font_id, *(TEXT_COLOR_ACTIVE if active else TEXT_COLOR_BASE))
-    blf.size(font_id, int(11 * bpy.context.preferences.system.ui_scale), 72)
+    blf.size(font_id, int(11 * bpy.context.preferences.system.ui_scale))
 
     # Compute text dimensions for horizontal centering
     dims = blf.dimensions(0, strip.name)

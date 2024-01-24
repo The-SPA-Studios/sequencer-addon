@@ -11,7 +11,7 @@ Features:
 - Editorial import/export capabilities (based on OTIO).
 - Shared folders (collection linking between scenes).
 
-Note: Without the use of the [Blender SPA](https://github.com/The-SPA-Studios/blender) version, the following features will not work properly:
+Note: Without the use of the [Blender SPA](https://github.com/The-SPA-Studios/blender) version, the following features might not work properly:
  - Timeline syncronization of scenes in the same window.
  - Batch rendering using the viewport render.
 
@@ -52,5 +52,10 @@ As per section 7 of the GPLv3, the license is supplemented with the following ad
 
 ## Authors
 
-The SPA Studios pipeline team (2021-2023):
+### The SPA Studios pipeline team (2021-2023):
+
 Antoine Boellinger ([@aboellinger](https://github.com/aboellinger)), Bryan Fordney ([@bryab](https://github.com/bryab)), Falk David ([@falkdavid](https://github.com/falkdavid)), Mickael Villain ([@micka-06](https://github.com/micka-06)), Nick Alberelli ([@NickTiny](https://github.com/NickTiny)), Paolo Fazio ([@PaoloFazio](https://github.com/PaoloFazio)), Yann Lanthony ([@yann-lty](https://github.com/yann-lty)).
+
+### Individual Contributors
+
+- Nick Alberelli ([@NickTiny](https://github.com/NickTiny))
